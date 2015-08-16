@@ -1,1 +1,83 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.main-style{
+	-fx-background-color: #4f372d;
+	-fx-font-size: 10pt;
+	-fx-text-fill: #ffffff;
+	-fx-background-radius: 6;
+	-fx-border-color: gray;
+	-fx-border-style: solid;
+	-fx-border-width: 1;
+	-fx-border-radius: 6;
+}
+.label{
+	-fx-text-fill: #ffffff;
+}
+.button{
+	-fx-border-radius: 4;
+	-fx-text-fill: #FFFFFF;
+	-fx-background-color: #00a0b0;
+	-fx-border-color: #AEAEAE;
+	-fx-font-weight: bold;
+	-fx-padding: 4 7 4 7;
+	
+}
+.button:hover{
+	-fx-background-color: #eb6841;
+	-fx-cursor: pointer;
+}
+.background-blue{
+	-fx-background-color: #00a0b0;
+}
+.background-red{
+	-fx-background-color: #cc2a36;
+}
+.background-orange{
+	-fx-background-color: #eb6841;
+}
+.background-brown{
+	-fx-background-color: #4f372d;
+}
+.background-yellow{
+	-fx-background-color: #edc951;
+}
+.close-button{
+	-fx-cursor: pointer;
+	-fx-text-fill: #ffffff;
+	-fx-border-color: #AEAEAE;
+	-fx-border-radius: 6;
+	-fx-background-radius: 6;
+	-fx-background-color: #605F61;
+	-fx-font-size: 14;
+ 	-fx-font-weight: bold;
+ 	-fx-padding: 0 5 0 5;
+}
+.close-button:hover{
+	-fx-background-color: #cc2a36;
+	-fx-cursor: pointer;
+}
+.hbox-top{
+	-fx-border-color: #edc951;
+	-fx-border-insets: 0;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: solid;
+    -fx-background-color: #eb6841;
+  	-fx-background-radius: 6 6 0 0;
+  	-fx-border-radius: 6 6 0 0;
+}
+.rect{
+	-fx-fill: #eb6841;
+}
+.text-area{
+	-fx-font-family: Consolas;
+  	-fx-highlight-fill: #4f372d;
+  	-fx-highlight-text-fill: #eb6841;
+  	-fx-pref-height: 100;
+  	-fx-text-fill: #000000;
+  	-fx-font-weight: bold;
+}
+.text-area .content{
+	-fx-background-color: #edc951;
+}
+#label-name{
+	-fx-text-fill: #000000;
+	-fx-font-weight: bold;
+}
