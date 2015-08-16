@@ -73,6 +73,9 @@
   	-fx-pref-height: 100;
   	-fx-text-fill: #000000;
   	-fx-font-weight: bold;
+  	-fx-background-radius: 0 0 6 6;
+  	-fx-border-radius: 0 0 6 6;
+  	-fx-border-width: 0;
 }
 .text-area .content{
 	-fx-background-color: #edc951;

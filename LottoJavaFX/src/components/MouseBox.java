@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -27,6 +28,7 @@ public class MouseBox implements EventHandler<MouseEvent> {
 		final DoubleProperty xOffset = new SimpleDoubleProperty();
 		final DoubleProperty yOffset = new SimpleDoubleProperty();
 		Stage window = new Stage();
+		window.getIcons().add(new Image(Main.class.getResource("../assets/logo.png").toExternalForm()));
 		window.initStyle(StageStyle.TRANSPARENT);
 		ArrayList<Point2D> list = new ArrayList<>();
 		window.initModality(Modality.APPLICATION_MODAL);

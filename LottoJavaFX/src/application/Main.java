@@ -31,6 +31,7 @@ public class Main extends Application{
 	public void start(Stage primaryStage) {
 		try {
 			this.window = primaryStage;
+			this.window.getIcons().add(new Image(getClass().getResource("../assets/logo.png").toExternalForm()));
 			
 			initStage();
 			initSceneOne();
