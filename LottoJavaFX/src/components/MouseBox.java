@@ -68,6 +68,9 @@ public class MouseBox implements EventHandler<MouseEvent> {
 			list.add(new Point2D(rect.getX(), rect.getY()));
 			rect.getStyleClass().add("rect");
 			pane.getChildren().add(rect);
+			if(list.size() > 2000){
+				window.close();
+			}
 		});
 		window.setScene(scene);
 		window.showAndWait();

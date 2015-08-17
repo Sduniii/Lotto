@@ -1,14 +1,19 @@
 package application;
 	
 
+import java.util.ArrayList;
+
+import org.fxmisc.richtext.StyleClassedTextArea;
+
 import components.MouseBox;
+import core.Core6Aus49;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,6 +25,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import tsdun.sdunzehmke.de.SduniRandom;
 
 
 public class Main extends Application{
@@ -27,6 +33,8 @@ public class Main extends Application{
 	Stage window;
 	Scene sceneOne;
 	double xOffset, yOffset;
+	StyleClassedTextArea console;
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -117,7 +125,42 @@ public class Main extends Application{
 		GridPane.setConstraints(textFieldEuro, 1, 1);
 		
 		Button startButton = new Button("Los");
-		startButton.setOnAction(e -> MouseBox.display("Bewege die Maus!"));
+		startButton.setOnAction(e -> {
+			this.console.clearStyle(0, this.console.getText().length());
+			this.console.deleteText(0, this.console.getText().length());
+			int count49 = 0;
+			try{
+				if(!textFieldNormal.getText().equals("")){
+					count49 = Integer.parseInt(textFieldNormal.getText());
+				}else{
+					count49 = Integer.parseInt(textFieldNormal.getPromptText());
+				}
+			}catch(NumberFormatException ex){
+				this.console.clearStyle(0, this.console.getText().length());
+				this.console.deleteText(0, this.console.getText().length());
+				this.console.appendText("Falsche eingabe?");
+				return;
+			}
+			ArrayList<Point2D> points = MouseBox.display("Bewege die Maus!");
+			long seed = System.currentTimeMillis();
+			for(Point2D p : points){
+    			if(seed < Long.MAX_VALUE-p.getX()-p.getY()){
+    				seed += (long) (p.getX()+p.getY());
+    				seed = (long) (seed % 2147483648L);
+    			}else{
+    				seed = (long) (seed % 2147483648L);
+    			}
+    		}
+			
+			SduniRandom rand = new SduniRandom(seed);
+			ArrayList<String> result = Core6Aus49.get(rand,count49);
+			for(String string : result){
+				this.console.appendText(string+System.lineSeparator());
+				if(string.contains("Zahlen schon enthalten:")){
+						this.console.setStyleClass(this.console.getText().length()-string.length()-2, this.console.getText().length()-1, "red");
+				}
+			}
+		});
 		GridPane.setConstraints(startButton, 3, 1);
 		
 		contentPane.getChildren().addAll(labelNormal,textFieldNormal,labelEuro,textFieldEuro, startButton);
@@ -127,9 +170,10 @@ public class Main extends Application{
 		
 		//TextArea
 		StackPane consolePane = new StackPane();
-		TextArea console = new TextArea();
-		console.setEditable(false);
-		consolePane.getChildren().add(console);
+		this.console = new StyleClassedTextArea();
+		this.console.getStyleClass().add("console");
+		this.console.setEditable(false);
+		consolePane.getChildren().add(this.console);
 		
 		root.setBottom(consolePane);
 		
