@@ -39,7 +39,7 @@ public class Main extends Application{
 	public void start(Stage primaryStage) {
 		try {
 			this.window = primaryStage;
-			this.window.getIcons().add(new Image(getClass().getResource("../assets/logo.png").toExternalForm()));
+			this.window.getIcons().add(new Image(getClass().getResource("logo.png").toExternalForm()));
 			
 			initStage();
 			initSceneOne();
@@ -63,7 +63,7 @@ public class Main extends Application{
 		this.window.initStyle(StageStyle.TRANSPARENT);
 	}
 	
-	private void initSceneOne() {
+	private void initSceneOne() throws Exception{
 		BorderPane root = new BorderPane();
 		root.getStyleClass().add("main-style");
 		
@@ -89,7 +89,7 @@ public class Main extends Application{
 		Label name =  new Label("LottoZahlen by Sduniii");
 		name.setId("label-name");
 		final ImageView logo = new ImageView();
-        Image image1 = new Image(getClass().getResource("../assets/logo.png").toExternalForm(), 20, 20, false, false);
+        Image image1 = new Image(getClass().getResource("logo.png").toExternalForm(), 20, 20, false, false);
         logo.setImage(image1);
 		menu.getChildren().addAll(logo, name);
 		

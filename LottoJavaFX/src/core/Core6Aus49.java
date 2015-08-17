@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import application.Main;
 import tsdun.sdunzehmke.de.SduniRandom;
 
 public class Core6Aus49 {
@@ -30,8 +31,8 @@ public class Core6Aus49 {
 			ArrayList<String> num = new ArrayList<String>();
 			try {
 				File fle = new File("lottozahlen.csv");
-				if(fle.exists()){
-					fle = new File("src/data/lottozahlen.csv");
+				if(!fle.exists()){
+					fle = new File(Main.class.getResource("lottozahlen.csv").toExternalForm());
 				}
 				BufferedReader br = new BufferedReader(new FileReader(fle));
 				String line;
