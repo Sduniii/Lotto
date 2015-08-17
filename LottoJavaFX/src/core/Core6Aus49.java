@@ -29,7 +29,11 @@ public class Core6Aus49 {
 			zahlen.add(zz);
 			ArrayList<String> num = new ArrayList<String>();
 			try {
-				BufferedReader br = new BufferedReader(new FileReader(new File("src/data/lottozahlen.csv")));
+				File fle = new File("lottozahlen.csv");
+				if(fle.exists()){
+					fle = new File("src/data/lottozahlen.csv");
+				}
+				BufferedReader br = new BufferedReader(new FileReader(fle));
 				String line;
 				while ((line = br.readLine()) != null) {
 					String[] linee = line.trim().split(",");
