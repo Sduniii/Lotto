@@ -40,7 +40,7 @@ public class Core6Aus49 {
 				}
 				String line;
 				while ((line = br.readLine()) != null) {
-					String[] linee = line.trim().split(",");
+					String[] linee = line.trim().split(";");
 					for (int j = 0; j < zahlen.size() - 2; j++) {
 						for (int m = 2; m < linee.length - 3; m++) {
 							if (String.valueOf(zahlen.get(j)).toLowerCase().equals(linee[m].trim().toLowerCase()) && !num.contains(linee[m])) {
