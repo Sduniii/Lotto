@@ -2,7 +2,9 @@ package core;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,36 +13,50 @@ import application.Main;
 import tsdun.sdunzehmke.de.SduniRandom;
 
 public class Core6Aus49 {
-	
-	public static ArrayList<String> get(SduniRandom rand, int count){
-		ArrayList<String> result = new ArrayList<>();
-		long zz = -1L;
-		ArrayList<Long> zahlen = new ArrayList<Long>();
-		for (int i = count; i > 0; i--) {
-			for (int j = 6; j > 0; j--) {
-				Long l = rand.next(1L, 49L);
-				while (zahlen.contains(l)) {
-					l = rand.next(1L, 49L);
-				}
-				zahlen.add(l);
+
+	public static ArrayList<String> get(SduniRandom rand, int count, boolean debug) {
+
+		try {
+			ArrayList<String> result = new ArrayList<>();
+			long zz = -1L;
+			ArrayList<Long> zahlen = new ArrayList<Long>();
+			 ArrayList<String> buffer = new ArrayList<String>();
+
+			BufferedReader br;
+			File fle = new File("lottozahlen.csv");
+			if (!fle.exists()) {
+				br = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("lottozahlen.csv")));
+			} else {
+				br = new BufferedReader(new FileReader(fle));			
 			}
-			Collections.sort(zahlen);
-			if (zz == -1L) {
-				zz = rand.next(0L, 9L);
+			String line;
+			while ((line = br.readLine()) != null) {
+				buffer.add(line);			
 			}
-			zahlen.add(zz);
-			ArrayList<String> num = new ArrayList<String>();
-			try {
-				BufferedReader br;
-				File fle = new File("lottozahlen.csv");
-				if(!fle.exists()){
-					br = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("lottozahlen.csv")));
-				}else{
-					br = new BufferedReader(new FileReader(fle));
+			br.close();
+			
+			for (int i = count; i > 0; i--) {
+				for (int j = 6; j > 0; j--) {
+					Long l = rand.next(1L, 49L);
+					while (zahlen.contains(l)) {
+						l = rand.next(1L, 49L);
+					}
+					zahlen.add(l);
 				}
-				String line;
-				while ((line = br.readLine()) != null) {
-					String[] linee = line.trim().split(";");
+				Collections.sort(zahlen);
+				if (zz == -1L) {
+					zz = rand.next(0L, 9L);
+				}
+				zahlen.add(zz);
+				ArrayList<String> num = new ArrayList<String>();
+
+				int h = 0;
+				for(String ln : buffer){
+					if (h == 0 && debug) {
+						result.add(line);
+						h++;
+					}
+					String[] linee = ln.trim().split(";");
 					for (int j = 0; j < zahlen.size() - 2; j++) {
 						for (int m = 2; m < linee.length - 3; m++) {
 							if (String.valueOf(zahlen.get(j)).toLowerCase().equals(linee[m].trim().toLowerCase()) && !num.contains(linee[m])) {
@@ -61,21 +77,26 @@ public class Core6Aus49 {
 						num.clear();
 					}
 				}
-				br.close();
 				if (num.size() > 3) {
 					i++;
-					result.add(zahlen.toString() + System.lineSeparator()+"Zahlen schon enthalten: " + num.toString());
+					result.add(zahlen.toString() + System.lineSeparator() + "Zahlen schon enthalten: " + num.toString());
 				} else {
 					result.add(zahlen.toString());
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+				zahlen.clear();
+				num.clear();
+
 			}
-			zahlen.clear();
-			num.clear();
+			buffer.clear();
+			return result;
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
 		}
-		
-		return result;
 	}
 
 }

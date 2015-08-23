@@ -8,6 +8,8 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import components.MouseBox;
 import core.Core6Aus49;
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -17,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -34,6 +37,8 @@ public class Main extends Application{
 	Scene sceneOne;
 	double xOffset, yOffset;
 	StyleClassedTextArea console;
+	final BooleanProperty debug = new SimpleBooleanProperty(false);
+	final BooleanProperty shiftPressed = new SimpleBooleanProperty(false);
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -153,7 +158,7 @@ public class Main extends Application{
     		}
 			
 			SduniRandom rand = new SduniRandom(seed);
-			ArrayList<String> result = Core6Aus49.get(rand,count49);
+			ArrayList<String> result = Core6Aus49.get(rand,count49,this.debug.getValue());
 			for(String string : result){
 				this.console.appendText(string+System.lineSeparator());
 				if(string.contains("Zahlen schon enthalten:")){
@@ -179,6 +184,28 @@ public class Main extends Application{
 		
 		this.sceneOne = new Scene(root);
 		this.sceneOne.setFill(Color.TRANSPARENT);
+		this.sceneOne.setOnKeyPressed(e->{
+			if(shiftPressed.getValue() && e.getCode() == KeyCode.D){
+				if(this.debug.getValue()){
+					this.debug.setValue(false);
+					this.console.clearStyle(0, this.console.getText().length());
+					this.console.deleteText(0, this.console.getText().length());
+					this.console.appendText("debug aus!");
+				}else{
+					this.debug.setValue(true);
+					this.console.clearStyle(0, this.console.getText().length());
+					this.console.deleteText(0, this.console.getText().length());
+					this.console.appendText("debug an!");
+				}
+			}else if(e.getCode() == KeyCode.SHIFT){
+				this.shiftPressed.setValue(true);
+			}
+		});
+		this.sceneOne.setOnKeyReleased(e -> {
+			if(e.getCode() == KeyCode.SHIFT){
+				this.shiftPressed.setValue(false);
+			}
+		});
 		
 		this.sceneOne.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		
