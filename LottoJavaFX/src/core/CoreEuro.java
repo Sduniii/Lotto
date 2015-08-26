@@ -18,8 +18,9 @@ public class CoreEuro {
 
 		try {
 			ArrayList<String> result = new ArrayList<>();
+			result.add("Eurojackpot:");
 			ArrayList<Long> zahlen = new ArrayList<Long>();
-			 ArrayList<String> buffer = new ArrayList<String>();
+			ArrayList<String> buffer = new ArrayList<String>();
 
 			BufferedReader br;
 			File fle = new File("eurojackpot.csv");

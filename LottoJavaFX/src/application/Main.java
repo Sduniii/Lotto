@@ -8,9 +8,9 @@ import components.MouseBox;
 import core.Core6Aus49;
 import core.CoreEuro;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -44,6 +44,7 @@ public class Main extends Application {
 	TextField textFieldNormal, textFieldEuro;
 	Spinner<Integer> spinnerNormal, spinnerEuro;
 	SduniRandom rand;
+	BorderPane loadingPane;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -122,11 +123,11 @@ public class Main extends Application {
 		textFieldNormal = new TextField();
 		textFieldNormal.setPromptText("4");
 		GridPane.setConstraints(textFieldNormal, 1, 0);
-		
+
 		Label labelWaveNormal = new Label("Reihe:");
 		GridPane.setConstraints(labelWaveNormal, 2, 0);
-		
-		spinnerNormal = new Spinner<>(3, 6, 4);
+
+		spinnerNormal = new Spinner<>(4, 6, 4);
 		spinnerNormal.setPrefWidth(60);
 		GridPane.setConstraints(spinnerNormal, 3, 0);
 
@@ -136,10 +137,10 @@ public class Main extends Application {
 		textFieldEuro = new TextField();
 		textFieldEuro.setPromptText("0");
 		GridPane.setConstraints(textFieldEuro, 1, 1);
-		
+
 		Label labelWaveEuro = new Label("Reihe:");
 		GridPane.setConstraints(labelWaveEuro, 2, 1);
-		
+
 		spinnerEuro = new Spinner<>(2, 5, 2);
 		spinnerEuro.setPrefWidth(60);
 		GridPane.setConstraints(spinnerEuro, 3, 1);
@@ -158,7 +159,65 @@ public class Main extends Application {
 			}
 
 			rand = new SduniRandom(seed);
-			new Thread(createTask()).start();
+			this.console.clearStyle(0,
+			this.console.getText().length());
+			this.console.deleteText(0, Main.this.console.getText().length());
+			int count49 = 0;
+			int countEur = 0;
+			try {
+				if (!Main.this.textFieldNormal.getText().equals("")) {
+					count49 = Integer.parseInt(Main.this.textFieldNormal.getText());
+				} else {
+					count49 = Integer.parseInt(Main.this.textFieldNormal.getPromptText());
+				}
+				if (!Main.this.textFieldEuro.getText().equals("")) {
+					countEur = Integer.parseInt(Main.this.textFieldEuro.getText());
+				} else {
+					countEur = Integer.parseInt(Main.this.textFieldEuro.getPromptText());
+				}
+			} catch (NumberFormatException ex) {
+				this.console.clearStyle(0,
+				this.console.getText().length());
+				this.console.deleteText(0, Main.this.console.getText().length());
+				this.console.appendText("Falsche eingabe?");
+			}
+			final int c49 = count49;
+			final int cEur = countEur;
+			new Thread() {
+				public void run() {
+					loadingPane.setVisible(true);
+					final ArrayList<String> list = Core6Aus49.get(rand, c49, spinnerNormal.getValue(), debug.getValue());
+					Platform.runLater(() -> {
+						for (String str : list) {
+							if (str.contains("6 aus 49:")) {
+								console.appendText(str + System.lineSeparator());
+								console.setStyleClass(console.getText().length() - str.length()-2, console.getText().length() - 1, "green");
+							} else {
+								console.appendText(str + System.lineSeparator());
+								if (str.contains("Zahlen schon enthalten:")) {
+									console.setStyleClass(console.getText().length() - str.length() - 2, console.getText().length() - 1, "red");
+								}
+							}
+						}
+					});
+					final ArrayList<String> list2 = CoreEuro.get(rand, cEur, spinnerEuro.getValue(), debug.getValue());
+					Platform.runLater(() -> {
+						for (String str : list2) {
+							if (str.contains("Eurojackpot:")) {
+								console.appendText(str + System.lineSeparator());
+								console.setStyleClass(console.getText().length() - str.length()-2, console.getText().length() - 1, "green");
+							} else {
+								console.appendText(str + System.lineSeparator());
+								if (str.contains("Zahlen schon enthalten:")) {
+									console.setStyleClass(console.getText().length() - str.length() - 2, console.getText().length() - 1, "red");
+								}
+							}
+						}
+					});
+					loadingPane.setVisible(false);
+				}
+			}.start();
+
 		});
 		GridPane.setConstraints(startButton, 4, 1);
 
@@ -175,29 +234,32 @@ public class Main extends Application {
 		consolePane.getChildren().add(this.console);
 
 		root.setBottom(consolePane);
-		
-		uRoot.getChildren().add(root);
-		
-		BorderPane load = new BorderPane();
-		load.getStyleClass().add("loading");
-		load.setVisible(false);
-		ProgressIndicator progress = new ProgressIndicator();
-		load.setCenter(progress);
 
-		uRoot.getChildren().add(load);
-		
+		uRoot.getChildren().add(root);
+
+		this.loadingPane = new BorderPane();
+		ProgressIndicator progress = new ProgressIndicator();
+		this.loadingPane.setCenter(progress);
+		this.loadingPane.getStyleClass().add("loading");
+		this.loadingPane.setPrefSize(100, 100);
+		this.loadingPane.setVisible(false);
+
+		uRoot.getChildren().add(this.loadingPane);
+
 		this.sceneOne = new Scene(uRoot);
 		this.sceneOne.setFill(Color.TRANSPARENT);
 		this.sceneOne.setOnKeyPressed(e -> {
 			if (shiftPressed.getValue() && e.getCode() == KeyCode.D) {
 				if (this.debug.getValue()) {
 					this.debug.setValue(false);
-					this.console.clearStyle(0, this.console.getText().length());
+					this.console.clearStyle(0,
+					this.console.getText().length());
 					this.console.deleteText(0, this.console.getText().length());
 					this.console.appendText("debug aus!");
 				} else {
 					this.debug.setValue(true);
-					this.console.clearStyle(0, this.console.getText().length());
+					this.console.clearStyle(0,
+					this.console.getText().length());
 					this.console.deleteText(0, this.console.getText().length());
 					this.console.appendText("debug an!");
 				}
@@ -214,60 +276,5 @@ public class Main extends Application {
 		this.sceneOne.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 	}
-	
-	public Task<Void> createTask(){
-            return new Task<Void>() {           
-                @Override
-                protected Void call() throws Exception {
-                	Main.this.console.clearStyle(0, Main.this.console.getText().length());
-                	Main.this.console.deleteText(0, Main.this.console.getText().length());
-        			int count49 = 0;
-        			int countEur = 0;
-        			try {
-        				if (!Main.this.textFieldNormal.getText().equals("")) {
-        					count49 = Integer.parseInt(Main.this.textFieldNormal.getText());
-        				} else {
-        					count49 = Integer.parseInt(Main.this.textFieldNormal.getPromptText());
-        				}
-        				if (!Main.this.textFieldEuro.getText().equals("")) {
-        					countEur = Integer.parseInt(Main.this.textFieldEuro.getText());
-        				} else {
-        					countEur = Integer.parseInt(Main.this.textFieldEuro.getPromptText());
-        				}
-        			} catch (NumberFormatException ex) {
-        				Main.this.console.clearStyle(0, Main.this.console.getText().length());
-        				Main.this.console.deleteText(0, Main.this.console.getText().length());
-        				Main.this.console.appendText("Falsche eingabe?");
-        			}
-        			
-        			ArrayList<String> result = Core6Aus49.get(Main.this.rand, count49, Main.this.spinnerNormal.getValue(), Main.this.debug.getValue());
-        			if (result != null && result.size() > 0) {
-        				String temp = "6 aus 49:" + System.lineSeparator();
-        				Main.this.console.appendText(temp);
-        				Main.this.console.setStyleClass(Main.this.console.getText().length() - temp.length(), Main.this.console.getText().length() - 1, "green");
-        				for (String string : result) {
-        					Main.this.console.appendText(string + System.lineSeparator());
-        					if (string.contains("Zahlen schon enthalten:")) {
-        						Main.this.console.setStyleClass(Main.this.console.getText().length() - string.length() - 2, Main.this.console.getText().length() - 1, "red");
-        					}
-        				}
-        			}
-        			result = CoreEuro.get(Main.this.rand, countEur, Main.this.spinnerEuro.getValue(), Main.this.debug.getValue());
-        			if (result != null && result.size() > 0) {
-        				String temp = "Eurojackpot:" + System.lineSeparator();
-        				Main.this.console.appendText(temp);
-        				Main.this.console.setStyleClass(Main.this.console.getText().length() - temp.length(), Main.this.console.getText().length() - 1, "green");
-        				for (String string : result) {
-        					Main.this.console.appendText(string + System.lineSeparator());
-        					if (string.contains("Zahlen schon enthalten:")) {
-        						Main.this.console.setStyleClass(Main.this.console.getText().length() - string.length() - 2, Main.this.console.getText().length() - 1, "red");
-        					}
-        				}
-        			}
-                   
-                    return null;
-                }
-            };
-    };
 
 }

@@ -18,6 +18,7 @@ public class Core6Aus49 {
 
 		try {
 			ArrayList<String> result = new ArrayList<>();
+			result.add("6 aus 49:");
 			long zz = -1L;
 			ArrayList<Long> zahlen = new ArrayList<Long>();
 			 ArrayList<String> buffer = new ArrayList<String>();
