@@ -88,3 +88,10 @@
 .red{
 	-fx-fill: red;
 }
+.green{
+	-fx-fill: green;
+	-fx-underline: true;
+}
+.loading{
+	-fx-background-color: transparent;
+}

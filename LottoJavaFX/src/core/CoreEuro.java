@@ -12,20 +12,19 @@ import java.util.Collections;
 import application.Main;
 import tsdun.sdunzehmke.de.SduniRandom;
 
-public class Core6Aus49 {
+public class CoreEuro {
 
 	public static ArrayList<String> get(SduniRandom rand, int count, int anz, boolean debug) {
 
 		try {
 			ArrayList<String> result = new ArrayList<>();
-			long zz = -1L;
 			ArrayList<Long> zahlen = new ArrayList<Long>();
 			 ArrayList<String> buffer = new ArrayList<String>();
 
 			BufferedReader br;
-			File fle = new File("lottozahlen.csv");
+			File fle = new File("eurojackpot.csv");
 			if (!fle.exists()) {
-				br = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("lottozahlen.csv")));
+				br = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("eurojackpot.csv")));
 			} else {
 				br = new BufferedReader(new FileReader(fle));			
 			}
@@ -36,18 +35,24 @@ public class Core6Aus49 {
 			br.close();
 			
 			for (int i = count; i > 0; i--) {
-				for (int j = 6; j > 0; j--) {
-					Long l = rand.next(1L, 49L);
+				for (int j = 5; j > 0; j--) {
+					Long l = rand.next(1L, 50L);
 					while (zahlen.contains(l)) {
-						l = rand.next(1L, 49L);
+						l = rand.next(1L, 50L);
 					}
 					zahlen.add(l);
 				}
 				Collections.sort(zahlen);
-				if (zz == -1L) {
-					zz = rand.next(0L, 9L);
+				ArrayList<Long> tmp = new ArrayList<Long>();
+				for (int m = 2; m > 0; m--) {
+					Long l = rand.next(1L, 10L);
+					while (tmp.contains(l)) {
+						l = rand.next(1L, 10L);
+					}
+					tmp.add(l);
 				}
-				zahlen.add(zz);
+				Collections.sort(zahlen);
+				zahlen.addAll(tmp);
 				ArrayList<String> num = new ArrayList<String>();
 
 				int h = 0;
@@ -57,7 +62,7 @@ public class Core6Aus49 {
 						h++;
 					}
 					String[] linee = ln.trim().split(";");
-					for (int j = 0; j < zahlen.size() - 2; j++) {
+					for (int j = 0; j < zahlen.size() - 3; j++) {
 						for (int m = 2; m < linee.length - 3; m++) {
 							if (String.valueOf(zahlen.get(j)).toLowerCase().equals(linee[m].trim().toLowerCase()) && !num.contains(linee[m])) {
 								// System.out.print(linee[m] + ";");
@@ -100,3 +105,4 @@ public class Core6Aus49 {
 	}
 
 }
+
