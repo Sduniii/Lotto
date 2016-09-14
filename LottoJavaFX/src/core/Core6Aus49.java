@@ -25,6 +25,7 @@ public class Core6Aus49 {
 
 			BufferedReader br;
 			File fle = new File("lottozahlen.csv");
+			//System.out.println(fle.exists());
 			if (!fle.exists()) {
 				br = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("lottozahlen.csv")));
 			} else {
@@ -32,7 +33,7 @@ public class Core6Aus49 {
 			}
 			String line;
 			while ((line = br.readLine()) != null) {
-				buffer.add(line);			
+				buffer.add(line);
 			}
 			br.close();
 			
