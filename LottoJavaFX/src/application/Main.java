@@ -127,7 +127,7 @@ public class Main extends Application {
 		Label labelWaveNormal = new Label("Reihe:");
 		GridPane.setConstraints(labelWaveNormal, 2, 0);
 
-		spinnerNormal = new Spinner<>(4, 6, 4);
+		spinnerNormal = new Spinner<>(3, 6, 3);
 		spinnerNormal.setPrefWidth(60);
 		GridPane.setConstraints(spinnerNormal, 3, 0);
 
