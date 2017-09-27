@@ -63,7 +63,17 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
-		launch(args);
+		if(args.length > 0){
+			if(args.length == 1 && args[0].equals("lotto")){
+				long seed = System.currentTimeMillis();
+				SduniRandom rand = new SduniRandom(seed);
+				final ArrayList<String> list = Core6Aus49.get(rand, 3, 4, false);
+				assert list != null;
+				list.forEach(System.out::println);
+			}
+		}else {
+			launch(args);
+		}
 	}
 
 	public void initStage() {
@@ -191,11 +201,11 @@ public class Main extends Application {
 						for (String str : list) {
 							if (str.contains("6 aus 49:")) {
 								console.appendText(str + System.lineSeparator());
-								console.setStyleClass(console.getText().length() - str.length()-2, console.getText().length() - 1, "green");
+								console.setStyleClass(console.getText().length() - str.length()-1, console.getText().length() - 1, "green");
 							} else {
 								console.appendText(str + System.lineSeparator());
 								if (str.contains("Zahlen schon enthalten:")) {
-									console.setStyleClass(console.getText().length() - str.length() - 2, console.getText().length() - 1, "red");
+									console.setStyleClass(console.getText().length() - str.length() - 1, console.getText().length() - 1, "red");
 								}
 							}
 						}
@@ -205,11 +215,11 @@ public class Main extends Application {
 						for (String str : list2) {
 							if (str.contains("Eurojackpot:")) {
 								console.appendText(str + System.lineSeparator());
-								console.setStyleClass(console.getText().length() - str.length()-2, console.getText().length() - 1, "green");
+								console.setStyleClass(console.getText().length() - str.length()-1, console.getText().length() - 1, "green");
 							} else {
 								console.appendText(str + System.lineSeparator());
 								if (str.contains("Zahlen schon enthalten:")) {
-									console.setStyleClass(console.getText().length() - str.length() - 2, console.getText().length() - 1, "red");
+									console.setStyleClass(console.getText().length() - str.length() - 1, console.getText().length() - 1, "red");
 								}
 							}
 						}
